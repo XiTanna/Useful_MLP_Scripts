@@ -1,0 +1,46 @@
+# basic parameters 
+SYSTEM       = AIMDML_NPTcooling
+#NCORE        = 28          # 8*?=? 
+#KPAR         = 4
+#NPAR         = 2
+KGAMMA       = .TRUE.      # GAMMA point
+KSPACING     = 2.0         # to ensure that the k-mesh = 1*1*1, must test
+ENCUT        = 500.0       # to make the "Pullay stress" zero, a higher ENCUT is needed (>=600)  
+PREC         = Normal      # precision-mode
+GGA          = PE          # GGA = PE
+ISTART       = 0           # read the WAVECAR file or not (ICHARG=2) 
+LWAVE        = .FALSE.     # write WAVECAR or not 
+LCHARG       = .FALSE.     # write CHGCAR or not 
+
+IVDW         = 12
+
+# Electronic Relaxation    
+ISMEAR       = 0           # 0=Gaussian smearing. (1,2)=Methfessel-Paxton order N 
+SIGMA        = 0.05         # width of the smearing in eV 
+EDIFF        = 1E-5        # global break for electronic SC-loop
+#EDIFFG       = -1e-2      # break for force
+LREAL        = A           # projection operators
+NELM         = 120         # maximum number of electronic SC
+NELMIN       = 5           # avoid breaking after 2 steps  
+# Molecular Dynamics 
+IBRION       = 0           # Activate MD 
+MDALGO       = 3           # 2=Nose-Hoover, 3=Langevin 
+ISIF         = 3           # 1=NVE, 2=NVT, 3=NpT 
+#SMASS        = 3
+ALGO         = Normal      # Normal=IALGO=38 (Davidson), Fast=IALGO=48 (RMM-DIIS)
+ISYM         = 0           # no symmetry for MD, completely
+TEBEG        = 298         # Begin temperature K 
+TEEND        = 298         # Final temperature K 
+NSW          = 100000      # Max ionic steps
+POTIM        = 0.50           # Timestep in fs
+LANGEVIN_GAMMA = 10.0 10.0 10.0 10.0    # damp (ps-1) for atom degrees-of-freedom
+LANGEVIN_GAMMA_L = 10      # friction coefficient (ps-1) for lattice degrees-of-freedom 
+PMASS        = 1000        # fictitious mass (in amu) to lattice degrees-of-freedom 
+PSTRESS      = 1.01E-3     # controls the target pressure in AIMD
+NWRITE       = 1           # long MD-runs use NWRITE=0 or 1 
+NBLOCK       = 1           # write PCF and DOS, scale kinetic energy, also the output interval of XDATCAR 
+# Machine learning force field
+ML_LMLFF     = .TRUE.        # enables/disables the use of MLFF
+ML_MODE      = train         # MLFF method (or mode)
+ML_LBASIS_DISCARD = .FALSE.
+ML_MB        = 5000

@@ -1,0 +1,31 @@
+#!/share/home/xitan/soft/Anaconda3/envs/xitan_conda/bin/python
+
+import argparse
+import os
+from ovito.data import DislocationNetwork
+import time
+from ovito.modifiers import SpatialBinningModifier
+from ovito.io import import_file, export_file
+from ovito.modifiers import ComputePropertyModifier,TimeAveragingModifier,ExpressionSelectionModifier,WrapPeriodicImagesModifier
+import numpy
+
+def process_file(input_file, output_folder, frame_interval):
+    #
+    if not os.path.exists(output_folder):
+        os.makedirs(output_folder)
+
+    pipeline = import_file(input_file)
+
+    print("Number of MD frames:", pipeline.source.num_frames)
+    export_file(pipeline, '{}/POSCAR.*'.format(output_folder), 'vasp', multiple_frames=True, every_nth_frame=frame_interval)
+    data = pipeline.compute()
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description="Process the given input file with the specified parameters.")
+    parser.add_argument('-i', '--input', default="mydump-npt.lammpstrj", help="Input filename")
+    parser.add_argument('-o', '--output', default="md_run_poscar", help="Output folder name")
+    parser.add_argument('-frame', '--frame', default=200, type=int, help="Frame interval")
+
+    args = parser.parse_args()
+
+    process_file(args.input, args.output, args.frame)

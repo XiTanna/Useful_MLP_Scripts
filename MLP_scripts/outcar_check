@@ -1,0 +1,34 @@
+#!/share/home/xitan/soft/Anaconda3/envs/xitan_conda/bin/python
+
+import os
+import glob
+import argparse
+
+def check_vasp_completion(outcar_file):
+    with open(outcar_file, 'r') as f:
+        content = f.read()
+    
+    if "reached required accuracy - stopping structural energy minimisation" in content:
+        print(f'{outcar_file} has finished due to reaching EDIFF.')
+    elif "Voluntary context switches" in content:
+        print(f'{outcar_file} has finished.')
+    else:
+        print(f'{outcar_file} has not finished. Path: {os.path.abspath(outcar_file)}')
+
+
+
+def main(args):
+    outcar_folder = args.outcar_folder
+
+    outcar_files = glob.glob(f"{outcar_folder}/**/OUTCAR", recursive=True)
+
+    for outcar_file in outcar_files:
+        check_vasp_completion(outcar_file)
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description='Check VASP completion.')
+    parser.add_argument('outcar_folder', type=str, default=".", nargs='?', help='Path to the directory containing OUTCAR files. Default is current directory.')
+
+    args = parser.parse_args()
+    main(args)
